@@ -1,0 +1,160 @@
+
+<!DOCTYPE html
+  PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+   <!--
+This HTML is auto-generated from an M-file.
+To make changes, update the M-file and republish this document.
+      --><title>tireforces</title><meta name="generator" content="MATLAB 7.10"><meta name="date" content="2011-04-05"><meta name="m-file" content="tireforces"><style type="text/css">
+
+body {
+  background-color: white;
+  margin:10px;
+}
+
+h1 {
+  color: #990000; 
+  font-size: x-large;
+}
+
+h2 {
+  color: #990000;
+  font-size: medium;
+}
+
+/* Make the text shrink to fit narrow windows, but not stretch too far in 
+wide windows. */ 
+p,h1,h2,div.content div {
+  max-width: 600px;
+  /* Hack for IE6 */
+  width: auto !important; width: 600px;
+}
+
+pre.codeinput {
+  background: #EEEEEE;
+  padding: 10px;
+}
+@media print {
+  pre.codeinput {word-wrap:break-word; width:100%;}
+} 
+
+span.keyword {color: #0000FF}
+span.comment {color: #228B22}
+span.string {color: #A020F0}
+span.untermstring {color: #B20000}
+span.syscmd {color: #B28C00}
+
+pre.codeoutput {
+  color: #666666;
+  padding: 10px;
+}
+
+pre.error {
+  color: red;
+}
+
+p.footer {
+  text-align: right;
+  font-size: xx-small;
+  font-weight: lighter;
+  font-style: italic;
+  color: gray;
+}
+
+  </style></head><body><div class="content"><pre class="codeinput"><span class="keyword">function</span> varargout = tireforces(simulation,vehicle,varargin)
+<span class="comment">% tireforces: calculates force on each tire based on tire model</span>
+<span class="comment">% Author: Ruslan Kurdyumov</span>
+<span class="comment">% Date: April 4, 2011</span>
+<span class="comment">%</span>
+<span class="comment">% Usage: Changes depending on the input parameters.  If simulation.tmodel</span>
+<span class="comment">% indicates that the desired tire model is linear, then the syntax for calling</span>
+<span class="comment">% this function should be: latForceVariable =</span>
+<span class="comment">% tireforces(simulation,vehicle,varargin) which returns a linear tire force</span>
+<span class="comment">% Fy = -Ca*alpha.  However, if simulation.tmodel indicates a nonlinear model,</span>
+<span class="comment">% possibly including coupled lateral and longitudinal forces, then the usage</span>
+<span class="comment">% could change to something like: [latForceVariable,longForceVariable] =</span>
+<span class="comment">% tireforces(simulation,vehicle,varargin) which returns both lateral and</span>
+<span class="comment">% longitudinal nonlinear tire forces according to the Fiala tire model.</span>
+
+<span class="comment">% Enumerate the wheels (this should appear in all of your files)</span>
+lf = 1; rf = 2; lr = 3; rr = 4;
+
+<span class="comment">% Here we use a "switch" statement to determine which type of tire model gets</span>
+<span class="comment">% used to calculate the tire forces. The function 'lower' is used to help make</span>
+<span class="comment">% the function more robust as it will convert the input string to lower-case</span>
+<span class="keyword">switch</span> lower(simulation.tmodel)
+    <span class="comment">% Linear tire model</span>
+    <span class="keyword">case</span> <span class="string">'linear'</span>
+        <span class="keyword">if</span> size(vehicle.Ca, 1) == 4 &amp;&amp; size(varargin{1},2) == 4
+            Ca = vehicle.Ca;
+            alpha = varargin{1};
+            Fy = zeros(1,4);
+            <span class="keyword">for</span> wheel = lf:rr
+                Fy(wheel) = -Ca(wheel) * alpha(wheel);
+            <span class="keyword">end</span>
+            varargout{1} = Fy;
+        <span class="keyword">else</span>
+            error(<span class="string">'Missing linear model tireforces parameters'</span>);
+        <span class="keyword">end</span>
+
+    <span class="comment">% Fiala nonlinear tire model</span>
+    <span class="keyword">case</span> <span class="string">'fiala_lat'</span>
+
+    <span class="comment">% Add other tire models here</span>
+    <span class="keyword">otherwise</span>
+        error(<span class="string">'Not a valid tire model'</span>);       <span class="comment">% Another error check</span>
+<span class="keyword">end</span>
+</pre><pre class="codeoutput">Input argument "simulation" is undefined.
+
+Error in ==&gt; tireforces at 22
+switch lower(simulation.tmodel)
+</pre><p class="footer"><br>
+      Published with MATLAB&reg; 7.10<br></p></div><!--
+##### SOURCE BEGIN #####
+function varargout = tireforces(simulation,vehicle,varargin)
+% tireforces: calculates force on each tire based on tire model
+% Author: Ruslan Kurdyumov
+% Date: April 4, 2011
+%
+% Usage: Changes depending on the input parameters.  If simulation.tmodel 
+% indicates that the desired tire model is linear, then the syntax for calling
+% this function should be: latForceVariable =
+% tireforces(simulation,vehicle,varargin) which returns a linear tire force
+% Fy = -Ca*alpha.  However, if simulation.tmodel indicates a nonlinear model,
+% possibly including coupled lateral and longitudinal forces, then the usage
+% could change to something like: [latForceVariable,longForceVariable] =
+% tireforces(simulation,vehicle,varargin) which returns both lateral and
+% longitudinal nonlinear tire forces according to the Fiala tire model.
+
+% Enumerate the wheels (this should appear in all of your files)
+lf = 1; rf = 2; lr = 3; rr = 4;
+
+% Here we use a "switch" statement to determine which type of tire model gets
+% used to calculate the tire forces. The function 'lower' is used to help make
+% the function more robust as it will convert the input string to lower-case
+switch lower(simulation.tmodel)
+    % Linear tire model
+    case 'linear'
+        if size(vehicle.Ca, 1) == 4 && size(varargin{1},2) == 4
+            Ca = vehicle.Ca;
+            alpha = varargin{1};
+            Fy = zeros(1,4);
+            for wheel = lf:rr
+                Fy(wheel) = -Ca(wheel) * alpha(wheel);
+            end
+            varargout{1} = Fy;
+        else
+            error('Missing linear model tireforces parameters');
+        end
+    
+    % Fiala nonlinear tire model
+    case 'fiala_lat'
+        
+    % Add other tire models here
+    otherwise 
+        error('Not a valid tire model');       % Another error check
+end
+
+##### SOURCE END #####
+--></body></html>

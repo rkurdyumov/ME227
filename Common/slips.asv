@@ -1,0 +1,75 @@
+function varargout = slips(simulation,vehicle,state,delta)
+% slips: calculates slip angles based on vehicle model
+% Author: Ruslan Kurdyumov
+% Date: April 4, 2011
+%
+% Usage: outputVariable = slipangles(simulation,vehicle,state,delta) where
+% simulation is a structure that contains a variable which tells which vehicle
+% model to use to calculate the slip angles. Vehicle contains the
+% parameterization of the vehicle being used, while state and delta give the
+% current vehicle state and driver input, respectively.  The slip angles are
+% returned in a structure that will change, depending on the model being used to
+% calculate the slip angles.
+%
+% Example: If simulation.model = 'bike', then alpha will contain the slip angles
+% for all four wheels calculated with the bicycle model.
+
+% Enumerate the wheels (this should appear in all of your files)
+lf = 1; rf = 2; lr = 3; rr = 4;
+
+% Here we use a "switch" statement to determine which type of vehicle model gets
+% used to calculate the slip angles. The function 'lower' is used to help make
+% the function more robust as it will convert the input string to lower-case
+switch lower(simulation.vmodel)
+    % Using the bicycle model
+    case 'bike'
+        if isfield(simulation, 'speed') && ... 
+            all(isfield(vehicle, {'a', 'b'})) && length(delta) == 4 
+            
+            Uy = state(1); r = state(2);
+            if length(state) == 2
+                Ux = simulation.speed;
+            else
+                Ux = state(3);
+            end
+            a = vehicle.a; b = vehicle.b;
+            alpha(lf) = ((Uy + a*r) / Ux) - delta(lf);
+            alpha(rf) = ((Uy + a*r) / Ux) - delta(rf);
+            alpha(lr) = (Uy - b*r) / Ux;
+            alpha(rr) = (Uy - b*r) / Ux;
+            varargout{1} = alpha;
+        else
+            error('Missing bike model slip angle parameters')
+        end
+    
+    case 'fourwheel'
+        if isfield(simulation, 'speed') && ... 
+            all(isfield(vehicle, {'a', 'b', 'd'})) && length(delta) == 4
+            
+            Uy = state(1); r = state(2);
+            if length(state) == 2
+                Ux = simulation.speed;
+            else
+                Ux = state(3);
+            end
+            a = vehicle.a; b = vehicle.b; d = vehicle.d; Re = vehicle.Re;
+            alpha(lf) = atan((Uy + a*r) / (Ux - d/2*r)) - delta(lf);
+            alpha(rf) = atan((Uy + a*r) / (Ux + d/2*r)) - delta(rf);
+            alpha(lr) = atan((Uy - b*r) / (Ux - d/2*r));
+            alpha(rr) = atan((Uy - b*r) / (Ux + d/2*r));
+            
+            v(lf) = (Ux - d/2*r)*cos(delta(lf)) + (Uy + a*r)*sin(delta(lf));
+            v(rf) = (Ux + d/2*r)*cos(delta(rf)) + (Uy + a*r)*sin(delta(rf));
+            v(lr) = Ux - d/2*r;
+            v(rr) = Ux + d/2*r;
+            w(lf)
+            kappa(lf) = 
+            
+            varargout{1} = alpha;
+            varargout{2} = kappa;
+        else
+            error('Missing fourwheel model slip angle parameters')
+        end
+    otherwise
+        error('Not a valid vehicle model')
+end

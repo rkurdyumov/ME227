@@ -1,0 +1,50 @@
+\documentclass{article}
+\begin{document}
+\section{Introduction}
+\subsection{Motivation}
+Max speed @ $1g$ lateral acceleration:
+$$\frac{v^2}{r} = g \Rightarrow v_{max} = \sqrt{rg}$$
+Therefore, we have:
+
+Inside: $v_{max} = \sqrt{Rg} = 31.3m/s$
+
+Outside: $v_{max} = \sqrt{(R+w)g} = 35.7m/s$
+
+Racing: $v_{max} =\sqrt{(R+w)g} = 35.7m/s$
+
+\subsection{Derivation}
+We know distance travelled is $d = r\theta$.  For the inside and outside tracks, $\theta = \pi$.
+We can calculate $\theta$ for the racing track by examining the illustrated curve.
+We can draw a right triangle with hypotenuse $R+w$ and vertical side $w$, with $\theta$ between them.
+Therefore, $cos\theta = \frac{w}{R+w}$, or:
+$$\theta_{racing} = 2\arccos{\frac{w}{R+w}}$$
+So we have:
+
+Inside: $d = {\pi}R = 314m$
+
+Outside: $d = {\pi}(R+w) = 408m$
+
+Racing: $d = {(2\arccos{\frac{w}{R+w}}})(R+w) = 348m$
+
+\subsection{Time through the curve}
+We know $t = \frac{d}{v_{max}}$, so:
+
+Inside: $t = {\pi}\sqrt\frac{R}{g} = 10.0s$
+
+Outside: $t = {\pi}\sqrt\frac{R+w}{g} = 11.4s$
+
+Racing: $t = 2\arccos{\frac{w}{R+w}}\sqrt\frac{R+w}{g} = 9.74s$
+
+\subsection{Which line to choose}
+The racing line has the fastest time.  The racing line and outside line have the fastest exit speed.
+So I would choose the racing line.
+
+\subsection{Limitations}
+The transition from a straight section to a constant radius curve requires an instantaneous step change in steering angle,
+which is impossible to accomplish in reality.
+
+\section{Results}
+
+\section{Conclusion}
+
+\end{document} 
